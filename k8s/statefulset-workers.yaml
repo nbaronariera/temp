@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: playwright-workers
+spec:
+  serviceName: "playwright-workers"
+  replicas: __REPLICAS__ # adjust replicas to the number of shards you want
+  selector:
+    matchLabels:
+      app: playwright-workers
+  template:
+    metadata:
+      labels:
+        app: playwright-workers
+    spec:
+      containers:
+        - name: worker
+          image: ghcr.io/youruser/plywrith-tests:latest
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: ROLE
+              value: "worker"
+            - name: SHARD_COUNT
+              value: "__SHARD_COUNT__" # deploy script will substitute this to match replicas
+          command: ["/bin/bash", "./start.sh"]

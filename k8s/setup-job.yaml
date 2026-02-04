@@ -1,0 +1,20 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: playwright-setup
+spec:
+  template:
+    metadata:
+      labels:
+        app: playwright-setup
+    spec:
+      restartPolicy: OnFailure
+      containers:
+        - name: setup
+          image: ghcr.io/youruser/plywrith-tests:latest
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: ROLE
+              value: "coordinator"
+          command: ["/bin/bash", "./start.sh"]
+  backoffLimit: 2
