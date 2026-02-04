@@ -5,12 +5,14 @@ import { defineBddConfig } from 'playwright-bdd';
 // Configuración de BDD: Define dónde están los .feature y los steps
 const testDir = defineBddConfig({
   features: 'features/*.feature',
-  steps: 'steps/*.steps.ts',
+  steps: ['steps/*.steps.ts', 'fixtures/authFixture.ts']
 });
 
 export default defineConfig({
   testDir, 
   reporter: 'html',
+  fullyParallel: true, 
+  workers: '50%',     
   use: {
     headless: true,
     screenshot: 'only-on-failure',

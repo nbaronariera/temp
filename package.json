@@ -9,7 +9,11 @@
   "devDependencies": {
     "@playwright/test": "^1.58.1",
     "@types/bun": "latest",
+    "@types/fs-extra": "^11.0.4",
+    "@types/proper-lockfile": "^4.1.4",
+    "fs-extra": "^11.3.3",
     "playwright-bdd": "^8.4.2",
+    "proper-lockfile": "^4.1.2",
     "typescript": "^5"
   },
   "peerDependencies": {

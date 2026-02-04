@@ -1,0 +1,5 @@
+[
+  { "id": 1, "username": "admin", "password": "123", "type": "admin", "isBusy": false },
+  { "id": 2, "username": "student_1", "password": "123", "type": "student", "isBusy": false },
+  { "id": 3, "username": "student_2", "password": "123", "type": "student", "isBusy": false }
+]
