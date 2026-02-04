@@ -46,7 +46,7 @@ if [ "${ROLE:-worker}" = "coordinator" ]; then
 fi
 
 # Build Playwright command. If only one shard, run normally (no --shard)
-PLAYWRIGHT_CMD=(bunx playwright test)
+PLAYWRIGHT_CMD=(bunx playwright test --project=chromium)
 if [ "$SHARD_COUNT" -gt 1 ]; then
   PLAYWRIGHT_CMD+=(--shard=${SHARD_INDEX}/${SHARD_COUNT})
 fi

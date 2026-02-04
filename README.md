@@ -18,14 +18,19 @@ This project was created using `bun init` in bun v1.3.3. [Bun](https://bun.com) 
 
 Build the container image and deploy to a Kubernetes cluster. For Minikube, use the `MINIKUBE=true` flow which builds the image locally and loads it into the Minikube node.
 
-1. Build & load (Minikube)
+**Note:** The Dockerfile is optimized for low memory footprint using Alpine base, multi-stage build, and only Chromium browser (~600MB final image vs ~3GB with all browsers).
+
+1. Build locally (without push)
 
 ```bash
-# from repo root
-IMAGE=ghcr.io/<tu-usuario>/plywrith-tests:latest MINIKUBE=true REPLICAS=3 ./k8s/deploy.sh
+# Build and keep locally
+./scripts/build-local.sh --image ghcr.io/<tu-usuario>/plywrith-tests:latest
+
+# Or build and load into Minikube
+./scripts/build-local.sh --image ghcr.io/<tu-usuario>/plywrith-tests:latest --minikube
 ```
 
-2. Build & push (remote registry)
+2. Build & load (Minikube)
 
 ```bash
 docker build -t ghcr.io/<tu-usuario>/plywrith-tests:latest .
