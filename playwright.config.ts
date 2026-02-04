@@ -18,12 +18,14 @@ export default defineConfig({
   projects: [
     {
       name: 'setup',
-      testMatch: /.*\.setup\.spec.ts/, 
+      testMatch: /.*\.setup\.feature\.spec\.(js|ts)/,
     },
     {
       name: 'chromium',
       dependencies: ['setup'],
-      use: { ...devices['Desktop Chrome'], 
+      use: { 
+        ...devices['Desktop Chrome'], 
+        executablePath: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH || undefined,
         launchOptions: {
           args: [
             '--no-sandbox',
@@ -37,7 +39,7 @@ export default defineConfig({
           ]
         }
       },
-      testIgnore: /.*\.setup\.spec\.ts/,
+      testIgnore: /.*\.setup\.feature\.spec\.(js|ts)/,
       
     },
   ],

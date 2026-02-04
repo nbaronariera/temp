@@ -4,31 +4,25 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 const { Given, When, Then } = createBdd();
-Given('cargo la sesion desde {string}', async ({ context }, fileName) => {
-  // Verificamos que el archivo exista antes de intentar cargarlo
-  if (fs.existsSync(fileName)) {
-    const authData = JSON.parse(fs.readFileSync(fileName, 'utf-8'));
-    
-    // 1. Inyectamos las cookies en el contexto actual
-    if (authData.cookies) {
-      await context.addCookies(authData.cookies);
-    }
-    
-    
-    console.log(`✅ Sesión cargada desde: ${fileName}`);
-  } else {
-    throw new Error(`❌ El archivo ${fileName} no existe. Ejecuta primero el escenario de login.`);
-  }
+
+// --- Pasos del Escenario 1 (Generar) ---
+
+Given('abro la pagina de login', async ({ page }) => {
+  await page.goto('https://practicetestautomation.com/practice-test-login/');
 });
 
-When('voy directamente al dashboard protegido', async ({ page }) => {
-  // Intentamos ir a la URL segura directamente
-  await page.goto('https://practicetestautomation.com/practice-test-login-success/');
+When('ingreso credenciales validas {string} y {string}', async ({ page }, user, pass) => {
+  await page.getByLabel('Username').fill(user);
+  await page.getByLabel('Password').fill(pass);
+  await page.getByRole('button', { name: 'Submit' }).click();
 });
 
-Then('deberia estar autenticado sin haber hecho login', async ({ page }) => {
-  // Si las cookies funcionaron, no nos redirigirá al login
+Then('veo el dashboard de exito', async ({ page }) => {
+  await expect(page).toHaveURL(/logged-in-successfully/);
   await expect(page.getByText('Logged In Successfully')).toBeVisible();
-  // Validamos que NO aparezca el botón de login
-  await expect(page.getByRole('button', { name: 'Submit' })).not.toBeVisible();
+});
+
+Then('guardo la sesion en el archivo {string}', async ({ page }, fileName) => {
+  await page.context().storageState({ path: fileName });
+  console.log(`✅ Estado guardado en: ${fileName}`);
 });

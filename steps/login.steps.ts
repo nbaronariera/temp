@@ -4,26 +4,31 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 const { Given, When, Then } = createBdd();
-
-// --- Pasos del Escenario 1 (Generar) ---
-
-Given('abro la pagina de login', async ({ page }) => {
-  await page.goto('https://practicetestautomation.com/practice-test-login/');
+Given('cargo la sesion desde {string}', async ({ context }, fileName) => {
+  // Verificamos que el archivo exista antes de intentar cargarlo
+  if (fs.existsSync(fileName)) {
+    const authData = JSON.parse(fs.readFileSync(fileName, 'utf-8'));
+    
+    // 1. Inyectamos las cookies en el contexto actual
+    if (authData.cookies) {
+      await context.addCookies(authData.cookies);
+    }
+    
+    
+    console.log(`✅ Sesión cargada desde: ${fileName}`);
+  } else {
+    throw new Error(`❌ El archivo ${fileName} no existe. Ejecuta primero el escenario de login.`);
+  }
 });
 
-When('ingreso credenciales validas {string} y {string}', async ({ page }, user, pass) => {
-  await page.getByLabel('Username').fill(user);
-  await page.getByLabel('Password').fill(pass);
-  await page.getByRole('button', { name: 'Submit' }).click();
+When('voy directamente al dashboard protegido', async ({ page }) => {
+  // Intentamos ir a la URL segura directamente
+  await page.goto('https://practicetestautomation.com/logged-in-successfully/');
 });
 
-Then('veo el dashboard de exito', async ({ page }) => {
-  await expect(page).toHaveURL(/practice-test-login-success/);
+Then('deberia estar autenticado sin haber hecho login', async ({ page }) => {
+  // Si las cookies funcionaron, no nos redirigirá al login
   await expect(page.getByText('Logged In Successfully')).toBeVisible();
-});
-
-Then('guardo la sesion en el archivo {string}', async ({ page }, fileName) => {
-  // Aquí ocurre la magia: Playwright vuelca cookies y localStorage a un archivo
-  await page.context().storageState({ path: fileName });
-  console.log(`✅ Estado guardado en: ${fileName}`);
+  // Validamos que NO aparezca el botón de login
+  await expect(page.getByRole('button', { name: 'Submit' })).not.toBeVisible();
 });

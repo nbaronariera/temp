@@ -1,7 +1,6 @@
 {
   "scripts": {
-    "test": "bunx bddgen && bunx playwright test",
-    "test:ui": "bunx bddgen && bunx playwright test --ui"
+    "test": "npx bddgen && npx playwright test"
   },
   "name": "plywrith-tests",
   "module": "index.ts",
@@ -10,7 +9,8 @@
   "devDependencies": {
     "@playwright/test": "^1.58.1",
     "@types/bun": "latest",
-    "playwright-bdd": "^8.4.2"
+    "playwright-bdd": "^8.4.2",
+    "typescript": "^5"
   },
   "peerDependencies": {
     "typescript": "^5"
