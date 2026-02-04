@@ -28,14 +28,22 @@ export default defineConfig({
         executablePath: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH || undefined,
         launchOptions: {
           args: [
-            '--no-sandbox',
-            '--disable-dev-shm-usage',
-            '--disable-gpu',
-            
-            '--disable-extensions',
-            '--disable-background-networking',
-            
-            '--ignore-certificate-errors' 
+            '--disable-extensions',           // No carga extensiones 
+            '--disable-component-update',     // No busca actualizaciones de componentes internos
+            '--disable-background-networking',// Bloquea peticiones de "llamada a casa" de Google
+            '--disable-default-apps',         // No carga Gmail/Docs/Drive apps por defecto
+            '--disable-sync',                 // No intenta sincronizar datos
+            '--mute-audio',                   // No procesa audio 
+            '--no-first-run',                 // Salta el wizard de bienvenida
+            '--disable-gpu',                  // En Linux/Docker, emular GPU por software es lento. Mejor apagarla.
+            '--disable-software-rasterizer',  // Evita renderizado complejo por software
+            '--disable-gl-drawing-for-tests', // Optimización específica de tests
+            '--no-sandbox',                   // Obligatorio en Docker. Elimina la capa de seguridad extra 
+            '--disable-dev-shm-usage',        // Usa /tmp en lugar de /dev/shm. Evita que el navegador crashee por falta de memoria compartida.
+            '--disable-background-timer-throttling', // Evita que los scripts se pausen si la pestaña no es visible
+            '--disable-backgrounding-occluded-windows',
+            '--disable-renderer-backgrounding',
+            '--disable-breakpad',             // Desactiva el reporte de errores (crash reporting) a Google
           ]
         }
       },
